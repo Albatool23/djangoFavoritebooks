@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+  <h1>Welcome{{user.fname}}!</h1>
+            <a href="/signout">Log out</a>
+</div>
+        {% if book.user.id == request.session.user_id %}
+            <form action="/edit" method="post">
+                {% csrf_token %}
+                <input type="text" name="title" value="{{ book.title }}" >
+                <input type="hidden" name="id" value="{{ book.id }}">
+                <p>Added by: {{ book.user.fname }} {{ book.user.lname }}</p>
+                <p>Added on: {{ book.created_at }}</p>
+                <p>Last update on: {{ book.updated_at }}</p>
+
+                    <label>Description</label>
+                <textarea name="desc" rows="6">{{ book.desc }}</textarea>
+       <input type="submit" value="Update" name="Update" >
+                        <input type="submit" value="Delete" name="delete" >
+                 </form>
+
+
+                {%else%}
+                <h2>{{ book.title }}</h2>
+                <p>Added by: {{ book.user.fname }} {{ book.user.lname }}</p>
+                <p>Added on: {{ book.created_at }}</p>
+                <p>Last update on: {{ book.updated_at }}</p>
+                <p>Description: {{ book.desc }}</p>
+                {%endif%}
+
+   </div>
+      <div>
+                <h2>User who likes this Book</h2>
+                <ul>
+                    {% for userFavorite in book.Favorite_by.all %}
+                    <li>
+                        {{ userFavorite.fname }} {{ userFavorite.lname }}
+                        {%if userFavorite.user.id == user.id %}
+                        {% if user not in book.Favorite_by.all %}
+                        <a href="addFavorite/{{ book.id }}">Add to Favorite</a>
+                        {% else %}
+                        <a href="/unFavorite/{{book.id}}">un-Favorite</a>
+                        {% endif %}
+                        {% endif %}
+                    </li>
+
+                    {%endfor%}
+                </ul>
+                {% if user not in book.Favorite_by.all %}
+                <p><a href="../Favorite/{{ book.id }}">Add to Favorite</a></p>
+                {% else %}
+                <p>
+                    <a href="/unFavorite/{{book.id}}">un-Favorite</a>
+                </p>
+                {% endif %}
+            </div>
+</body>
+</html>

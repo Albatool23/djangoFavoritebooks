@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div class="bar">
+    <a href="/signout">logout</a>
+
+<p> welcome, {{user.fname}}</p>
+</div>
+
+<div>
+     <form action="/addBook" method="POST">
+         {% csrf_token %}
+    <p> Add a Favorite Book </p>
+   <p>title <input type="text" name="title"></p>
+   <p>Descriptior <input type="text" name="desc"></p>
+ <input type="submit" value="Add">
+</form>
+
+</div>
+
+<div>
+
+    <p> All Book</p>
+
+    {%for book in books%}
+
+    <a href="/displybook/{{book.id}}"> {{book.title}}</a>
+        <p> (added by {{book.user.fname}} {{book.user.lname}})</p>
+
+           {% if book not in user.liked_books.all %}
+
+                    <p><a href="/Favorite/{{ book.id }}">Add to Favorite</a></p>
+                    {% else %}
+                    <p>this is one of your Favorites</p>
+                    {% endif %}
+
+
+</div>
+  {%endfor%}
+
+
+
+
+</body>
+</html>
